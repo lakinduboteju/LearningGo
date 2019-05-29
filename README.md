@@ -23,7 +23,7 @@ My practice code from Linkedin Learning course of Learning Go.
 
     `No method or operator overloading`. Each function should have a unique name within a package or a type (class).
 
-    `No exception handling` (no try catch or finally clauses). Error objects are being return from functions. Programmer has to handle `error objects` and handle errors with conditional logic.
+    `No exception handling` (no try catch or finally clauses). Error objects are being return from functions. Programmer has to handle `error` objects and handle errors with conditional logic.
 
     `No implicit type conversion`. All type conversions have to be done explicitly by programmer.
 
@@ -33,7 +33,7 @@ My practice code from Linkedin Learning course of Learning Go.
 
 * `Private` methods/fields starts with lower-case letter.
 
-* `Semicolon` is optional. But sometimes it is required to use semicolons to make the code mis-interpreted by compiler. Lexer that analyses the code before compiling, adds `;` after each statement, because Go compiler expects `;` for each statement. Most of the time, Go takes line break as the end of the preceding statement.
+* `Semicolon` is optional. But sometimes it is required to use semicolons to prevent the code mis-interpreted by compiler. Lexer that analyses the code before compiling, adds `;` after each statement, because Go compiler expects `;` for each statement. Most of the time, Go takes line break as the end of the preceding statement.
 
 * In code blocks, starting brace should be on the same line as preceding statement. Go does sensitive to the format of the written code. Moreover, sometimes parentheses are not needed.
 
@@ -105,7 +105,7 @@ str = "some"
 
 ``` go
 // All functions starts with func identifier.
-// Then function name. One package, type or struct should cannot have functions with same name (no overloading).
+// Then function name. One package, type or struct cannot have functions with same name (no overloading).
 // Input arguments are declared next in parentheses.
 // At the end there's return type or multiple types (multiple types in parentheses).
 func some(i int) int {
@@ -151,12 +151,13 @@ str := fmt.Sprintf("%v, %.2f, %T", f, f, f)
 
 ### 3. [ConsoleInput](src/ConsoleInput/consoleinput.go)
 
-* Read string line from stdin.
+* Read string line from stdin. Convert read strings in to different types.
 
 ``` go
 import (
     "bufio"
     "os"
+    "strconv"
 )
 
 reader := bufio.NewReader(os.Stdin)
@@ -164,7 +165,12 @@ str, err := reader.ReadString('\n')
 if nil != err {
     // Handle error.
 } else {
-    // Code comes here.
+    // Type conversion
+    str = strings.TrimSpace(str)
+    i, err1 := strconv.ParseInt(str, 10, 64)
+    // err1 should be handled
+    f, err2 := strconv.ParseFloat(str, 64)
+    // err2 should be handled
 }
 ```
 
@@ -173,8 +179,10 @@ if nil != err {
 ``` go
 var s1 string
 var s2 string
-fmt.Scanln(&s1, &s2)
-// Input: "one two\n"
+var i1 int
+fmt.Scanln(&s1, &s2, &i1)
+// Input: "one two 3\n"
 // s1 = "one"
 // s2 = "two"
+// i1 = 3
 ```
