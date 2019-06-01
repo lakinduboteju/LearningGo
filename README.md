@@ -186,3 +186,49 @@ fmt.Scanln(&s1, &s2, &i1)
 // s2 = "two"
 // i1 = 3
 ```
+
+### 4. [UsefulTypes](src/UsefulTypes/usefultypes.go)
+
+* Builtin types
+
+``` go
+uint8, uint16, uint32, uint64
+int8, int16, int32, int64
+float32, float64
+bool
+string
+byte // alias to uint8
+int // will be int32 or int64 depending on host
+// Character value will be assigned to int32 type
+var aChar1 rune = 'a' // rune is alias to int32
+var aChar2 int32 = 'b'
+```
+
+* Constant notation
+
+``` go
+// var identifier changes to const identifier
+const MY_CONSTANT int = 42
+const MY_WORD = "Hello"
+// := is available only for variables not for const
+```
+
+* Operations on string variables
+
+``` go
+import (
+    "strings"
+)
+
+// string is immutable
+str1 := "hello, world"
+str2 := strings.ToUpper(str1)
+str3 := strings.Title(str1)
+
+// string comparison
+isEqual := str1 == str2
+// string comparison ignore case
+isEqual = strings.EqualFold(str1, str2)
+// check if string contains sub-string
+strings.Contains(str1, "hello")
+```
