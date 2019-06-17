@@ -109,6 +109,37 @@ var b bool = true
 var s string = "hello"
 ```
 
+* Arithmetic operators on numeric types
+
+``` go
+// Math operators
++  // addition
+-  // subtraction
+*  // multiplication
+/  // division
+%  // remainder
+
+// Bitwise operators
+&  // bitwise AND
+|  // bitwise OR
+^  // bitwise XOR
+&^ // bit clear
+<< // left shift
+>> // right shift
+
+++ // increment by 1
+-- // decrement by 1
++= // add and assign
+-= // subtract and assign
+*= // multiply and assign
+/= // divide and assign
+%= // get remainder and assign
+
+&= // get bitwise AND and assign
+|= // get bitwise OR and assign
+^= // get bitwise XOR and assign
+```
+
 * Type conversion
 
     * `T(v)` conversion functions can be used to convert values between numeric types.
@@ -248,12 +279,130 @@ var (
 )
 ```
 
+* Interfaces
+
+``` go
+type Location interface {
+    GetX() int
+    GetY() int
+}
+```
+
+* Implement an interface
+
+``` go
+type Point struct {
+    X, Y int
+}
+
+func (p *Point) GetX() int {
+    return p.X
+}
+
+func (p *Point) GetY() int {
+    return p.Y
+}
+
+// Now type Point implements Location interface.
+```
+
+* Take any typed value as an input
+
+``` go
+func printany(v interface{}) {
+    fmt.Println(v)
+}
+
+// Can pass any typed value to the function
+printany(1)
+printany(3.14)
+printany("hello")
+printany(struct{a, b int}{1, 2})
+```
+
+### Type conversion and assertion
+
+* Type conversion example
+
+``` go
+// Location interface
+type Location interface {
+    GetX() int
+    GetY() int
+}
+
+// Pointer type implements Location interface
+type Point struct {
+    X, Y int
+}
+
+// Implementing Location interface
+func (p *Point) GetX() int {
+    return p.X
+}
+
+// Implementing Location interface
+func (p *Point) GetY() int {
+    return p.Y
+}
+
+// Convert a Point to Location type
+point := Point{X: 1, Y: 2}
+location := Location(&point) // have to pass pointer of Point value
+```
+
+* Type assertion example 1
+
+``` go
+// Using type assertion to convert types
+func timeMap(y interface{}) {
+    // try type conversion
+    z, ok := y.(map[string]interface{})
+    // type conversion success?
+	if ok {
+		z["updated_at"] = time.Now()
+	}
+}
+```
+
+* Type assertion example 2
+
+``` go
+func printString(value interface{}) {
+    // Do differently depending on type
+	switch str := value.(type) {
+	case string:
+		fmt.Println(str)
+	case Stringer:
+		fmt.Println(str.String())
+	}
+}
+```
+
+* Type assertion example 3
+
+``` go
+if err != nil {
+    // if clause with small declaration before condition
+  if msqlerr, ok := err.(*mysql.MySQLError); ok && msqlerr.Number == 1062 {
+    log.Println("We got a MySQL duplicate :(")
+  } else {
+    return err
+  }
+}
+```
+* Type assertion facts :-
+
+    * Type assertion can be used only with `interface{}` typed values.
+
+    * `type` keyword for type assertion can be used only with a switch-case.
+
 ## Control logic
 
 ### If-else
 
 ``` go
-// Below an assignment operation happens first.
+// A short declaration statement preceding the conditional expression.
 if num := 9; num < 0 {
     fmt.Println(num, "is negative")
 } else if num < 10 {
@@ -286,7 +435,11 @@ for sum < 1000 {
 // Infinite loop
 for {
   // do something in a loop forever
-  // or break
+  // or use break statement to break out of loop
+  
+  // continue statement can be used to
+  // stop running the loop body midway and
+  // continue to the next iteration
 }
 ```
 
@@ -358,4 +511,160 @@ is <= 6
 is <= 7
 is <= 8
 Try again!
+```
+
+* Switch with no expression
+
+``` go
+// Here we use switch as an if-else chain
+var BMI = 21.0 
+switch {
+case BMI < 18.5:
+    fmt.Println("You're underweight")
+case BMI >= 18.5 && BMI < 25.0:
+    fmt.Println("Your weight is normal")
+case BMI >= 25.0 && BMI < 30.0:
+    fmt.Println("You're overweight")
+default:
+    fmt.Println("You're obese")	
+}
+```
+
+* Conditional / Logical operators
+
+``` go
+&& // And
+|| // Or
+== // Equals
+!= // Not equal
+!  // Not
+<  // Less than
+>  // Greater than
+<= // Less than or equal
+>= // Greater than ot equal
+```
+
+## Memory allocation
+
+### new
+
+* Built-in function, allocates memory and does not initialize it, and it only zeros it.
+
+* Returns pointer to allocated empty memory block.
+
+``` go
+func NewFile(fd int, name string) *File {
+    // Allocate zero memory for a File struct
+    f := new(File)
+    // After allocating zero memory we have manually assign
+    // values for fields.
+    f.fd = fd
+    f.name = name
+    f.dirinfo = nil
+    f.nepipe = 0
+
+    // This is same as
+    // f := File{fd, name, nil, 0}
+    
+    return f
+}
+```
+
+### make
+
+* Used only to create slices, maps, and channels.
+
+* It returns an initialized value, not a pointer to the value.
+
+``` go
+// Make a slice
+s := make([]string)
+// Make a map
+m := make(map[int]string)
+```
+
+## Collections
+
+* Create collections
+
+``` go
+type Vertex struct {
+    Lat, Long float64
+}
+
+// Array
+a1 := [2]Vertex
+a1[0] = Vertex{40.68433, -74.39967}
+a1[1] = Vertex{37.42202, -122.08408}
+
+// Array using literal
+a2 := [2]Vertex{
+    Vertex{
+        40.68433, -74.39967
+    },
+    Vertex{
+        37.42202, -122.08408
+    }
+}
+
+// Slice
+s1 := make([]Vertex, 2, 2)
+s1[0] = Vertex{40.68433, -74.39967}
+s1[1] = Vertex{37.42202, -122.08408}
+
+// Slice using literal
+s2 := []Vertex{
+    Vertex{
+        40.68433, -74.39967
+    },
+    Vertex{
+        37.42202, -122.08408
+    }
+}
+
+// Map
+m1 := make(map[string]Vertex)
+m1["Bell Labs"] = Vertex{40.68433, -74.39967}
+m1["Google"] = Vertex{37.42202, -122.08408}
+
+// Map using literal
+m2 := map[string]Vertex{
+	"Bell Labs": Vertex{
+		40.68433, -74.39967,
+	},
+	"Google": Vertex{
+		37.42202, -122.08408,
+	},
+}
+```
+
+* Append to collections
+
+``` go
+// Cannot append to arrays, because they are fixed size.
+
+// Append to slice
+s2 = append(s2, Vertex{20.5636, -133.46063})
+
+// To maps just add new key value pair
+m2["Home"] = Vertex{
+    20.5636, -133.46063
+}
+```
+
+* Remove from collections
+
+``` go
+// Cannot remove from arrays, because they are fixed size.
+
+// Remove first 2 items from slice
+s2 = append(colors[2:])
+// Remove last 3 items from slice
+s2 = append(colors[:len(colors)-3]
+// Remove 5th items from slice
+i := 5
+s2 = append(colors[:i], colors[i+1:]...)
+
+// Remove from map
+delete(m2, "Google")
 ```

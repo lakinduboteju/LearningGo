@@ -232,3 +232,52 @@ isEqual = strings.EqualFold(str1, str2)
 // check if string contains sub-string
 strings.Contains(str1, "hello")
 ```
+
+### 5. [Collections](src/Collections/collections.go)
+
+``` go
+// Array
+numbers := [10]int
+numbers[0] = 1
+numbers[1] = 2
+/*and so on*/
+
+numbers := [10]int{1, 2, /*and so on*/}
+
+// length of array
+l := len(numbers)
+
+// Slice
+colors := make([]string, 5, 5)
+colors[0] = "Red"
+colors[1] = "Green"
+/*and so on*/
+
+// Using slice literal to make and assign values
+colors := []string{"Red", "Green", /*and so on*/}
+
+// Append to slice
+colors = append(colors, "Purple", "Magenta")
+
+// Remove 3rd item from slice
+i := 3
+colors = append(colors[:i], colors[i+1:]...)
+// Remove first 2 items from slice
+colors = append(colors[2:])
+// Remove last 5 items from slice
+colors = append(colors[:len(colors)-5])
+
+// Map
+states := make(map[string]string)
+states["WA"] = "Washington"
+states["OR"] = "Oregon"
+/*and so on*/
+
+// Iterate
+for k, v := range states {
+    if k == "OR" {
+        // delete item
+        delete(states, k)
+    }
+}
+```
